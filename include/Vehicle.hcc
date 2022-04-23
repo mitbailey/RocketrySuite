@@ -1,0 +1,39 @@
+/**
+ * @file Vehicle.hcc
+ * @author Mit Bailey (mitbailey99@gmail.com)
+ * @brief
+ * @version See Git tags for version information.
+ * @date 2022.04.23
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
+#ifndef VEHICLE_HCC
+#define VEHICLE_HCC
+
+#include "Parachute.hcc"
+#include "Engine.hcc"
+
+class Parachute;
+
+class Vehicle
+{
+public:
+    Vehicle(double mass_empty, double cross_sectional_area, double drag_coefficient);
+
+    void AttachEngine(Engine *engine) { this->engine = engine; };
+    void AttachParachute(Parachute *parachute) { this->parachute = parachute; };
+
+    void UpdateVehicle(double mass_empty, double cross_sectional_area, double drag_coefficient);
+
+    // double massLoaded;
+    double massEmpty; // Without engine
+    double crossSectionalArea;
+    double dragCoefficient;
+
+    Engine *engine;
+    Parachute *parachute;
+};
+
+#endif // VEHICLE_HPP

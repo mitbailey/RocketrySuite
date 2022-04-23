@@ -1,0 +1,44 @@
+/**
+ * @file Parachute.hcc
+ * @author Mit Bailey (mitbailey99@gmail.com)
+ * @brief
+ * @version See Git tags for version information.
+ * @date 2022.04.23
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
+#ifndef PARACHUTE_HCC
+#define PARACHUTE_HCC
+
+#include "Vehicle.hcc"
+
+class Vehicle;
+
+class Parachute
+{
+public:
+    Parachute(double diameter, double drag_coefficient);
+
+    void displayParachute();
+
+    void SetDiamater(double value) { diameter = value; }
+    void SetDragCoefficient(double value) { dragCoefficient = value; }
+    void SetLandingVelocity(double value) { landingVelocity = value; }
+    void SetDeploymentTime(double value) { deploymentTime = value; }
+
+    // Calculates and sets the diameter required to achieve the desired descent speed.
+    double CalculateSetDiameter(double vehicle_mass_at_descent, double air_density);
+
+    // Calculates and sets the speed given the diameter.
+    double CalculateSetDescentSpeed(double vehicle_mass_at_descent, double air_density);
+    double CalculateSetDescentSpeed(Vehicle *vehicle);
+
+    double diameter;
+    double dragCoefficient = 0.75; // Assume estes rocket parasheet by default (1.5 for real parachute).
+    double landingVelocity = 3;    // Maximum speed we want the rocket to be hitting the ground (m/s).
+    double deploymentTime;
+};
+
+#endif // PARACHUTE_HCC

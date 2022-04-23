@@ -1,0 +1,23 @@
+/**
+ * @file common.hcc
+ * @author Mit Bailey (mitbailey99@gmail.com)
+ * @brief
+ * @version See Git tags for version information.
+ * @date 2022.04.22
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
+#ifndef COMMON_HCC
+#define COMMON_HCC
+
+#define _VER_ "0.2-alpha"
+#define TOKENS_LEN_X 32
+#define TOKENS_LEN_Y 64
+
+// Natural Constants
+#define g 9.80665 // Force of gravity, m/s^2
+#define R 287.05  // Gas constant for dry air, J/(kg.K)
+
+#endif // COMMON_HCC

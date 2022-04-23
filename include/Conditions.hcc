@@ -1,0 +1,33 @@
+/**
+ * @file Conditions.hcc
+ * @author Mit Bailey (mitbailey99@gmail.com)
+ * @brief
+ * @version See Git tags for version information.
+ * @date 2022.04.23
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
+#ifndef CONDITIONS_HCC
+#define CONDITIONS_HCC
+
+class Conditions
+{
+public:
+    Conditions();
+    Conditions(double temperature, double pressure);
+    Conditions(double temperature, double pressure, double windspeed);
+
+    void UpdateConditions(double temperature, double pressure);
+    void UpdateConditions(double temperature, double pressure, double windspeed);
+
+    double pressure;    // Pascals
+    double temperature; // Kelvin
+    double windspeed;   // m/s
+    double airDensity;  // kg/m^3
+
+    double CalculateSetAirDensity();
+};
+
+#endif // CONDITIONS_HCC

@@ -1,0 +1,31 @@
+/**
+ * @file Engine.hcc
+ * @author Mit Bailey (mitbailey99@gmail.com)
+ * @brief
+ * @version See Git tags for version information.
+ * @date 2022.04.23
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
+#ifndef ENGINE_HCC
+#define ENGINE_HCC
+
+class Engine
+{
+public:
+    Engine(double mass_empty, double mass_loaded, double impulse, double burn_time);
+
+    double CalculateAverageThrust();
+
+    double massEmpty;  // Fuel expended
+    double massLoaded; // Fully fueled
+    double impulse;
+    double burnTime;
+
+private:
+    double thrust;
+};
+
+#endif // ENGINE_HCC

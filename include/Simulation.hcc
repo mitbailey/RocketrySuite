@@ -1,0 +1,69 @@
+/**
+ * @file Simulation.hcc
+ * @author Mit Bailey (mitbailey99@gmail.com)
+ * @brief
+ * @version See Git tags for version information.
+ * @date 2022.04.23
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
+#ifndef SIMULATION_HCC
+#define SIMULATION_HCC
+
+#include "Conditions.hcc"
+#include "Vehicle.hcc"
+
+typedef struct
+{
+    double avg_mass;
+    double avg_thrust;
+    double K;
+    double Q;
+    double X;
+    double velocity_max;
+    double Z;
+    double Y;
+    double altitude_boost;
+    double descent_speed;
+    double mass_coast;
+    double velocity_max_x_a;
+    double velocity_max_y_a;
+    double altitude_boost_a;
+    double velocity_terminal;
+    double height_coast_a;
+    double altitude_max_a;
+    double time_meco_to_ap_a;
+    double time_ap_to_deployment_a;
+    double deployment_altitude_a;
+    double time_deployment_to_ground_a;
+    double deployment_velocity_a;
+    double time_of_flight_a;
+    double drift;
+    double range_boost;
+    double range_coast;
+    double range;
+} sim_state_t;
+
+class Simulation
+{
+public:
+    Simulation();
+
+    Vehicle *AttachVehicle(Vehicle *vehicle);
+    Conditions *AttachConditions(Conditions *conditions);
+
+    void Simulate();
+    void PerformCalculations();
+    void DisplaySimState();
+
+    Vehicle *vehicle;
+    Conditions *conditions;
+
+    sim_state_t simState[1];
+
+    double launchAngle;
+};
+
+#endif // SIMULATION_HCC

@@ -1,0 +1,48 @@
+/**
+ * @file display.hcc
+ * @author Mit Bailey (mitbailey99@gmail.com)
+ * @brief
+ * @version See Git tags for version information.
+ * @date 2022.04.23
+ *
+ * @copyright Copyright (c) 2022
+ *
+ */
+
+#ifndef INPUT_OUTPUT_HCC
+#define INPUT_OUTPUT_HCC
+
+#include "common.hcc"
+#include "stdint.h"
+#include "Simulation.hcc"
+
+/**
+ * @brief
+ *
+ */
+void introduction();
+
+/**
+ * @brief
+ *
+ */
+void display_help_abridged();
+
+/**
+ * @brief
+ *
+ */
+void display_help_verbose();
+
+/**
+ * @brief
+ *
+ * @param command
+ */
+void display_help_command(const char *command);
+
+void tokenize(const char *input, char tokens[TOKENS_LEN_X][TOKENS_LEN_Y], uint16_t tokens_len_x, uint16_t tokens_len_y);
+
+void parse_and_execute(Simulation *sim, const char tokens[TOKENS_LEN_X][TOKENS_LEN_Y], uint16_t tokens_len_x, uint16_t tokens_len_y);
+
+#endif // INPUT_OUTPUT_HCC
