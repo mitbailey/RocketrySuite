@@ -11,6 +11,7 @@
 
 #include "Conditions.hcc"
 #include "common.hcc"
+#include "meb_print.h"
 
 Conditions::Conditions()
 {
@@ -20,15 +21,19 @@ Conditions::Conditions()
     CalculateSetAirDensity();
 }
 
-Conditions::Conditions(double temperature, double pressure)
+void Conditions::UpdateConditions(double windspeed)
 {
-    this->pressure = pressure;
+    this->windspeed = windspeed;
+}
+
+void Conditions::UpdateConditions(double windspeed, double temperature)
+{
+    this->windspeed = windspeed;
     this->temperature = temperature;
-    windspeed = 0;
     CalculateSetAirDensity();
 }
 
-Conditions::Conditions(double temperature, double pressure, double windspeed)
+void Conditions::UpdateConditions(double windspeed, double temperature, double pressure)
 {
     this->pressure = pressure;
     this->temperature = temperature;
@@ -36,19 +41,13 @@ Conditions::Conditions(double temperature, double pressure, double windspeed)
     CalculateSetAirDensity();
 }
 
-void Conditions::UpdateConditions(double temperature, double pressure)
+void Conditions::Print()
 {
-    this->pressure = pressure;
-    this->temperature = temperature;
-    CalculateSetAirDensity();
-}
-
-void Conditions::UpdateConditions(double temperature, double pressure, double windspeed)
-{
-    this->pressure = pressure;
-    this->temperature = temperature;
-    this->windspeed = windspeed;
-    CalculateSetAirDensity();
+    bprintlf("CONDITIONS~");
+    bprintlf("Temperature: %.03f", temperature);
+    bprintlf("Pressure:    %.03f", pressure);
+    bprintlf("Air density: %.03f", airDensity);
+    bprintlf("Windspeed:   %.03f", windspeed);
 }
 
 double Conditions::CalculateSetAirDensity()

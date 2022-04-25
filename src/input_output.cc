@@ -60,9 +60,9 @@ void display_help_command(const char *command)
         bprintlf("Description: ");
         bprintlf("Displays all commands with a short description of what they do.\n");
 
-        bprintlf("Parameters: ");
-        bprintlf("Required... N/A");
-        bprintlf("Optional... <units>, <command> \n");
+        bprintlf("Usage: ");
+        bprintlf(">help\n");
+        bprintlf(">help <command>\n");
     }
     else if (!strcmp(command, "<command>"))
     {
@@ -73,9 +73,8 @@ void display_help_command(const char *command)
         bprintlf("Description: ");
         bprintlf("Shows the credits for the program.\n");
 
-        bprintlf("Parameters: ");
-        bprintlf("Required... N/A");
-        bprintlf("Optional... N/A\n");
+        bprintlf("Usage: ");
+        bprintlf(">credits\n");
     }
     else if (!strcmp(command, "units"))
     {
@@ -93,16 +92,19 @@ void display_help_command(const char *command)
     else if (!strcmp(command, "set vehicle"))
     {
         bprintlf("Description: ");
-        bprintlf("Creates a new launch vehicle with the relevant parameters.\n");
+        bprintlf("Sets the active launch vehicle to the parameters entered.\n");
 
-        bprintlf("Parameters: ");
-        bprintlf("Required... <Vehicle Mass (Empty)> <Propellant Mass> <Engine Mass (Loaded)> <Cross-Sectional Area> <Engine Impulse> <Engine Thrust>");
-        bprintlf("Optional... <Coefficient of Drag>, <Angle>\n");
+        bprintlf("Usage: ");
+        bprintlf(">set vehicle <Mass Empty (kg)> <Cross Sectional Area (m^2)> <Drag Coefficient>\n");
+    }
+    else if (!strcmp(command, "set engine"))
+    {
+        
     }
     else if (!strcmp(command, "set conditions"))
     {
         bprintlf("Description: ");
-        bprintlf("Creates a new set of weather conditions.\n");
+        bprintlf("Sets the weather conditions to the parameters entered.\n");
 
         bprintlf("Parameters: ");
         bprintlf("Required... <Temperature> <Pressure>");
@@ -253,9 +255,12 @@ void display_credits()
     // TODO: Make credits printout.
 }
 
-void tokenize(const char *input, char tokens[TOKENS_LEN_X][TOKENS_LEN_Y], uint16_t tokens_len_x, uint16_t tokens_len_y)
+uint16_t tokenize(const char *input, char tokens[TOKENS_LEN_X][TOKENS_LEN_Y], uint16_t tokens_len_x, uint16_t tokens_len_y)
 {
     // NOTE: arr[a][b] == arr[(a * a_len) + (b)]
+
+    uint16_t num_tokens = 0;
+    uint8_t last_was_delimiter = 1;
 
     // Tokenize the input.
     for (size_t i = 0, x = 0, y = 0; i < strlen(input); i++, y++)
@@ -265,10 +270,16 @@ void tokenize(const char *input, char tokens[TOKENS_LEN_X][TOKENS_LEN_Y], uint16
             tokens[x][y] = '\0';
             x++;
             y = -1;
+            last_was_delimiter = 1;
         }
         else
         {
             tokens[x][y] = input[i];
+            if (last_was_delimiter)
+            {
+                last_was_delimiter = 0;
+                num_tokens++;
+            }
         }
     }
 
@@ -280,17 +291,19 @@ void tokenize(const char *input, char tokens[TOKENS_LEN_X][TOKENS_LEN_Y], uint16
         {
             break;
         }
-        dbprintlf("Token: %s", tokens[i]);
+        // dbprintlf("Token: %s", tokens[i]);
     }
+
+    return num_tokens;
 }
 
-void parse_and_execute(Simulation *sim, const char tokens[TOKENS_LEN_X][TOKENS_LEN_Y], uint16_t tokens_len_x, uint16_t tokens_len_y)
+void parse_and_execute(Simulation *sim, const char tokens[TOKENS_LEN_X][TOKENS_LEN_Y], uint16_t num_tokens)
 {
+    dbprintlf("num_tokens: %d", num_tokens);
+
     // Parse the input.
     if (!strcmp(tokens[0], "help"))
     {
-        dbprintlf("Entered help section.");
-
         if (tokens[1][0] == '\0')
         { // Only one token.
             display_help_verbose();
@@ -312,62 +325,138 @@ void parse_and_execute(Simulation *sim, const char tokens[TOKENS_LEN_X][TOKENS_L
     }
     else if (!strcmp(tokens[0], "run"))
     {
-        // simulation->run();
+        // Display current launch vehicle and conditions.
+        bprintlf("SIMULATION SETTINGS...");
+        sim->vehicle->Print();
+        bprintlf();
+        sim->conditions->Print();
+        bprintlf();
+
         sim->Simulate();
     }
     else if (!strcmp(tokens[0], "set"))
     {
         if (!strcmp(tokens[1], "vehicle"))
         {
+            if (num_tokens != 5)
+            {
+                bprintlf(RED_FG "ERROR: Incorrect number of arguments.");
+                bprintlf("Usage: >set vehicle <Mass Empty (kg)> <Cross Sectional Area (m^2)> <Drag Coefficient>");
+                return;
+            }
+
+            sim->vehicle->UpdateVehicle(strtod(tokens[2], NULL), strtod(tokens[3], NULL), strtod(tokens[4], NULL));
         }
-        else if (!strcmp(tokens[1], "conditions"))
+        else if (!strcmp(tokens[1], "engine"))
         {
+            if (num_tokens != 6)
+            {
+                bprintlf(RED_FG "ERROR: Incorrect number of arguments.");
+                bprintlf("Usage: >set engine <Mass Empty (kg)> <Mass Loaded (kg)> <Impulse> <Burn Time (s)>");
+                return;
+            }
+
+            sim->vehicle->engine->UpdateEngine(strtod(tokens[2], NULL), strtod(tokens[3], NULL), strtod(tokens[4], NULL), strtod(tokens[5], NULL));
         }
         else if (!strcmp(tokens[1], "parachute"))
         {
+            // TODO: Possibly make it so that a -1 will leave a value unchanged for all / any commands.
+            if (num_tokens != 6)
+            {
+                bprintlf(RED_FG "ERROR: Incorrect number of arguments.");
+                bprintlf("Usage: >set parachute <Diameter (m) (-1 to omit)> <Landing Velocity (m/s) (-1 to omit)> <Drag Coefficient> <Deployment Time from Ignition (s)>");
+                return;
+            }
+
+            sim->vehicle->parachute->UpdateParachute(strtod(tokens[2], NULL), strtod(tokens[3], NULL), strtod(tokens[4], NULL), strtod(tokens[5], NULL));
+        }
+        else if (!strcmp(tokens[1], "conditions"))
+        {
+            if (num_tokens == 3)
+            {
+                sim->conditions->UpdateConditions(strtod(tokens[2], NULL));
+            }
+            else if (num_tokens == 4)
+            {
+                sim->conditions->UpdateConditions(strtod(tokens[2], NULL), strtod(tokens[3], NULL));
+            }
+            else if (num_tokens == 5)
+            {
+                sim->conditions->UpdateConditions(strtod(tokens[2], NULL), strtod(tokens[3], NULL), strtod(tokens[4], NULL));
+            }
+            else
+            {
+                bprintlf(RED_FG "ERROR: Incorrect number of arguments.");
+                bprintlf("Usage: ");
+                bprintlf(">set conditions <windspeed (m/s)>");
+                bprintlf(">set conditions <windspeed (m/s)> <temperature (K)>");
+                bprintlf(">set conditions <windspeed (m/s)> <temperature (K)> <pressure (Pa)>");
+            }
         }
         else if (!strcmp(tokens[1], "angle"))
         {
+            if (num_tokens != 3)
+            {
+                bprintlf(RED_FG "ERROR: Incorrect number of arguments.");
+                bprintlf("Usage: >set angle <angle (deg)>");
+                return;
+            }
+
+            sim->launchAngle = strtod(tokens[2], NULL);
         }
     }
     else if (!strcmp(tokens[0], "display"))
     {
         if (!strcmp(tokens[1], "vehicle"))
         {
+            sim->vehicle->Print();
+        }
+        else if (!strcmp(tokens[1], "engine"))
+        {
+            sim->vehicle->engine->Print();
         }
         else if (!strcmp(tokens[1], "conditions"))
         {
+            sim->conditions->Print();
         }
         else if (!strcmp(tokens[1], "parachute"))
         {
+            sim->vehicle->parachute->Print();
         }
         else if (!strcmp(tokens[1], "angle"))
         {
+            bprintlf("Launch angle: %.03f", sim->launchAngle);
         }
     }
     else if (!strcmp(tokens[0], "calculate"))
     {
         if (!strcmp(tokens[1], "parachute"))
         {
-            if (!strcmp(tokens[1], "diameter"))
+            if (!strcmp(tokens[2], "diameter"))
             {
+                sim->vehicle->parachute->CalculateSetDiameter(sim->vehicle->massEmpty, sim->conditions->airDensity);
             }
-            else if (!strcmp(tokens[1], "velocity"))
+            else if (!strcmp(tokens[2], "velocity"))
             {
+                sim->vehicle->parachute->CalculateSetDiameter(sim->vehicle->massEmpty, sim->conditions->airDensity);
             }
         }
         else if (!strcmp(tokens[1], "angle"))
         {
+            sim->CalculateLaunchAngle();
         }
         else if (!strcmp(tokens[1], "area"))
         {
+
         }
     }
     else if (!strcmp(tokens[0], "credits"))
     {
+        display_credits();
     }
     else if (!strcmp(tokens[0], "exit"))
     {
+        bprintlf("Exiting program...");
         exit(0);
     }
     else
