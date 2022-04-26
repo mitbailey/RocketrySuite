@@ -41,7 +41,7 @@ Open Terminal in the RocketrySuite/ directory and execute
 
 ## Use Instructions
 ### Windows
-After compilation, either double-click `RocketrySuite.exe` or run `RocketrySuite.exe` in a CMD window opened within the repository directory. Then, follow the on-screen prompts.  
+After compilation or having downloaded the executable from the Releases page (https://github.com/mitbailey/RocketrySuite/releases), either double-click `RocketrySuite.exe` or run `RocketrySuite.exe` in a CMD window opened within the repository directory. Then, follow the on-screen prompts.  
 
 ### Linux
 After compilation, run `./sim.out` in a Terminal from within the repository directory. Then, follow the on-screen prompts.
