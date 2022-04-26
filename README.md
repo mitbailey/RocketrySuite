@@ -1,4 +1,6 @@
 # RocketrySuite
+This program is CC21 compliant (https://github.com/SmallSatMakers/CC21).
+
 ## Description
 Program to calculate the trajectory of a model rocket. 
 
