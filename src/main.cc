@@ -68,11 +68,14 @@ int main(int argc, char **argv)
         // Input was not erroneous. Replace newline with null-terminator.
         input[strlen(input) - 1] = '\0';
 
+        // Print newline.
+        bprintlf();
+
         // Tokenize the input.
-        tokenize(input, tokens, TOKENS_LEN_X, TOKENS_LEN_Y);
+        uint16_t num_tokens = tokenize(input, tokens, TOKENS_LEN_X, TOKENS_LEN_Y);
 
         // Parse the input.
-        parse_and_execute(sim, tokens, TOKENS_LEN_X, TOKENS_LEN_Y);
+        parse_and_execute(sim, tokens, num_tokens);
     }
 
     delete sim;

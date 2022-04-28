@@ -37,30 +37,59 @@
 
 Simulation::Simulation()
 {
-    this->vehicle = nullptr;
-    this->conditions = nullptr;
+    this->vehicle = new Vehicle();
+    this->conditions = new Conditions();
 
     memset(simState, 0x0, sizeof(sim_state_t));
 }
 
-Vehicle *Simulation::AttachVehicle(Vehicle *vehicle)
+Simulation::~Simulation()
 {
-    Vehicle *old_vehicle = this->vehicle;
-    this->vehicle = vehicle;
-    return old_vehicle;
+    delete vehicle;
+    delete conditions;
 }
 
-Conditions *Simulation::AttachConditions(Conditions *conditions)
-{
-    Conditions *old_conditions = this->conditions;
-    this->conditions = conditions;
-    return old_conditions;
-}
+// Vehicle *Simulation::AttachVehicle(Vehicle *vehicle)
+// {
+//     Vehicle *old_vehicle = this->vehicle;
+//     this->vehicle = vehicle;
+//     return old_vehicle;
+// }
+
+// Conditions *Simulation::AttachConditions(Conditions *conditions)
+// {
+//     Conditions *old_conditions = this->conditions;
+//     this->conditions = conditions;
+//     return old_conditions;
+// }
 
 void Simulation::Simulate()
 {
     PerformCalculations();
     DisplaySimState();
+}
+
+double Simulation::CalculateLaunchAngle()
+{
+    PerformCalculations();
+
+    // calculateVelocityMax();
+    // calculateDeploymentAltitudeA();
+
+    // Finding the angle mathematically is incredibly difficult.
+    // Instead, I find it iteratively.
+    double proposedRange = 0;
+    double proposedAngle = 90;
+    while ((proposedRange < simState->drift - 0.001 || proposedRange > simState->drift + 0.001) && proposedAngle > 45)
+    {
+        proposedRange = (simState->altitude_boost * (cos(proposedAngle / (180 / M_PI)))) + ((pow(simState->velocity_terminal, 2) / g) * log((pow(simState->velocity_terminal, 2) + g * (simState->velocity_max * (cos(proposedAngle / (180 / M_PI)))) * vehicle->parachute->deploymentTime) / (pow(simState->velocity_terminal, 2))));
+        proposedAngle -= 0.000001;
+    }
+    launchAngle = proposedAngle;
+
+    dbprintlf("Calculated launch angle: %.03f", proposedAngle);
+
+    return launchAngle;
 }
 
 void Simulation::PerformCalculations()
@@ -85,6 +114,13 @@ void Simulation::PerformCalculations()
 
     // Calculate K, Q, and X.
     double K = 0.5 * conditions->airDensity * vehicle->dragCoefficient * vehicle->crossSectionalArea;
+
+    if (avg_thrust - (avg_mass * g) < 0)
+    {
+        bprintlf(RED_FG "ERROR: Average thrust (%.03f) is less than the average mass times g (%.03f).", avg_mass, avg_mass * g);
+        return;
+    }
+
     double Q = sqrt((avg_thrust - (avg_mass * g)) / K);
     double X = (2 * K * Q) / avg_mass;
 
@@ -94,6 +130,7 @@ void Simulation::PerformCalculations()
     // Calculate altitude boost, the altitude gained during powered ascent.
     double Z = avg_thrust - avg_mass * g;
     double Y = K * velocity_max * velocity_max;
+
     double altitude_boost = (-avg_mass / (2 * K)) * log((Z - Y) / (Z));
 
     // Calculate descent speed under parachute.
@@ -150,6 +187,25 @@ void Simulation::PerformCalculations()
 
     // calculateRange();
     double range = range_boost + range_coast;
+
+    // dbprintlf(BLUE_FG "%.03f", avg_mass);
+    // dbprintlf(BLUE_FG "%.03f", avg_thrust);
+    // dbprintlf(BLUE_FG "%.03f", K);
+    // dbprintlf(BLUE_FG "%.03f", Q);
+    // dbprintlf(BLUE_FG "%.03f", X);
+    // dbprintlf(BLUE_FG "%.03f", velocity_max);
+    // dbprintlf(BLUE_FG "%.03f", Z);
+    // dbprintlf(BLUE_FG "%.03f", Y);
+    // dbprintlf(BLUE_FG "%.03f", altitude_boost);
+    // dbprintlf(BLUE_FG "%.03f", descent_speed);
+    // dbprintlf(BLUE_FG "%.03f", mass_coast);
+    // dbprintlf(BLUE_FG "%.03f", velocity_max_x_a);
+    // dbprintlf(BLUE_FG "%.03f", velocity_max_y_a);
+    // dbprintlf(BLUE_FG "%.03f", altitude_boost_a);
+    // dbprintlf(BLUE_FG "%.03f", velocity_terminal);
+    // dbprintlf(BLUE_FG "%.03f", height_coast_a);
+    // dbprintlf(BLUE_FG "%.03f", altitude_max_a);
+    // dbprintlf(BLUE_FG "%.03f", time_meco_to_ap_a);
 
     // TODO: Just set them directly above (for now helps to debug instances where we forget to calculate a value before using it).
     simState->avg_mass = avg_mass;

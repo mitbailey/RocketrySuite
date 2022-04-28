@@ -28,9 +28,12 @@
 class Engine
 {
 public:
-    Engine(double mass_empty, double mass_loaded, double impulse, double burn_time);
+    Engine();
+    void UpdateEngine(double mass_empty, double mass_loaded, double impulse, double burn_time);
 
     double CalculateAverageThrust();
+
+    void Print();
 
     double massEmpty;  // Fuel expended
     double massLoaded; // Fully fueled

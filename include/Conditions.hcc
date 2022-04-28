@@ -32,8 +32,11 @@ public:
     Conditions(double temperature, double pressure);
     Conditions(double temperature, double pressure, double windspeed);
 
-    void UpdateConditions(double temperature, double pressure);
-    void UpdateConditions(double temperature, double pressure, double windspeed);
+    void UpdateConditions(double windspeed);
+    void UpdateConditions(double windspeed, double temperature);
+    void UpdateConditions(double windspeed, double temperature, double pressure);
+
+    void Print();
 
     double pressure;    // Pascals
     double temperature; // Kelvin

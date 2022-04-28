@@ -63,20 +63,22 @@ class Simulation
 {
 public:
     Simulation();
+    ~Simulation();
 
-    Vehicle *AttachVehicle(Vehicle *vehicle);
-    Conditions *AttachConditions(Conditions *conditions);
+    // Vehicle *AttachVehicle(Vehicle *vehicle);
+    // Conditions *AttachConditions(Conditions *conditions);
 
     void Simulate();
     void PerformCalculations();
     void DisplaySimState();
+    double CalculateLaunchAngle();
 
     Vehicle *vehicle;
     Conditions *conditions;
 
     sim_state_t simState[1];
 
-    double launchAngle;
+    double launchAngle = 90; // 90 degrees (vertical) by default.
 };
 
 #endif // SIMULATION_HCC

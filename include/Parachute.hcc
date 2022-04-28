@@ -32,7 +32,9 @@ class Vehicle;
 class Parachute
 {
 public:
-    Parachute(double diameter, double drag_coefficient);
+    Parachute();
+    // Parachute(double diameter, double drag_coefficient);
+    void UpdateParachute(double diameter, double landingVelocity, double dragCoefficient, double deploymentTime);
 
     void displayParachute();
 
@@ -47,6 +49,8 @@ public:
     // Calculates and sets the speed given the diameter.
     double CalculateSetDescentSpeed(double vehicle_mass_at_descent, double air_density);
     double CalculateSetDescentSpeed(Vehicle *vehicle);
+
+    void Print();
 
     double diameter;
     double dragCoefficient = 0.75; // Assume estes rocket parasheet by default (1.5 for real parachute).

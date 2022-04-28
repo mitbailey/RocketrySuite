@@ -33,12 +33,14 @@ class Parachute;
 class Vehicle
 {
 public:
-    Vehicle(double mass_empty, double cross_sectional_area, double drag_coefficient);
-
-    void AttachEngine(Engine *engine) { this->engine = engine; };
-    void AttachParachute(Parachute *parachute) { this->parachute = parachute; };
-
+    Vehicle();
+    ~Vehicle();
     void UpdateVehicle(double mass_empty, double cross_sectional_area, double drag_coefficient);
+
+    // void AttachEngine(Engine *engine) { this->engine = engine; };
+    // void AttachParachute(Parachute *parachute) { this->parachute = parachute; };
+
+    void Print();
 
     // double massLoaded;
     double massEmpty; // Without engine
