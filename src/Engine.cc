@@ -34,10 +34,10 @@ double Engine::CalculateAverageThrust()
     return thrust;
 }
 
-void Print()
+void Engine::Print()
 {
-    bprintlf("Mass empty:  %.03f", mass_empty);
-    bprintlf("Mass loaded: %.03f", mass_loaded);
+    bprintlf("Mass empty:  %.03f", massEmpty);
+    bprintlf("Mass loaded: %.03f", massLoaded);
     bprintlf("Impulse:     %.03f", impulse);
-    bprintlf("Burn time:   %.03f", burn_time);
+    bprintlf("Burn time:   %.03f", burnTime);
 }
