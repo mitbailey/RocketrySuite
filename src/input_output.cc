@@ -7,6 +7,19 @@
  *
  * @copyright Copyright (c) 2022
  *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * 
  */
 
 #include "common.hcc"
@@ -18,7 +31,11 @@
 void introduction()
 {
     bprintlf("--- MODEL ROCKETRY CALCULATION SUITE v%s ---", _VER_);
-    bprintlf("Copyright (c) Mit Bailey 2022");
+
+    bprintlf("\nCopyright (C) 2022  Mit Bailey");
+    bprintlf("This program comes with ABSOLUTELY NO WARRANTY.");
+    bprintlf("This is free software, and you are welcome to redistribute it under certain conditions. Type `license' to view licensing information.\n");
+
     bprintlf("github.com/mitbailey\n");
 }
 
@@ -253,6 +270,18 @@ void display_credits()
     // TODO: Make credits printout.
 }
 
+void display_license()
+{
+    bprintlf("Model Rocketry Calculation Suite - Program to calculate the trajectory of a model rocket.");
+    bprintlf("Copyright (C) 2022  Mit Bailey\n");
+    
+    bprintlf("This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n");
+    
+    bprintlf("This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n");
+    
+    bprintlf("You should have received a copy of the GNU General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>.\n");
+}
+
 void tokenize(const char *input, char tokens[TOKENS_LEN_X][TOKENS_LEN_Y], uint16_t tokens_len_x, uint16_t tokens_len_y)
 {
     // NOTE: arr[a][b] == arr[(a * a_len) + (b)]
@@ -309,6 +338,10 @@ void parse_and_execute(Simulation *sim, const char tokens[TOKENS_LEN_X][TOKENS_L
 
             display_help_command(command);
         }
+    }
+    else if (!strcmp(tokens[0], "license"))
+    {
+        display_license();
     }
     else if (!strcmp(tokens[0], "run"))
     {
