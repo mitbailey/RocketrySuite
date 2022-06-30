@@ -271,21 +271,21 @@ void Simulation::DisplaySimState()
 
     if (simState->time_ap_to_deployment_a <= 0.f)
     {
-        bprintlf("WARNING: Parachute will deploy %.03f seconds prior to reaching apogee!", simState->time_ap_to_deployment_a);
+        bprintlf(YELLOW_BG "WARNING: Parachute will deploy %.03f seconds prior to reaching apogee!", simState->time_ap_to_deployment_a);
     }
 
     if (simState->altitude_max_a < 15.f)
     {
-        bprintlf("WARNING: Vehicle apogee %.03f meters!", simState->altitude_max_a);
+        bprintlf(YELLOW_BG "WARNING: Vehicle apogee %.03f meters!", simState->altitude_max_a);
     }
     else if (simState->altitude_max_a > 300)
     {
-        bprintlf("WARNING: Vehicle apogee exceeds %.03f meters!", simState->altitude_max_a);
+        bprintlf(YELLOW_BG "WARNING: Vehicle apogee exceeds %.03f meters!", simState->altitude_max_a);
     }
 
     if (simState->velocity_max >= 343)
     {
-        bprintlf("WARNING: Vehicle maximum speed exceeds %.03f meters per second!", simState->velocity_max);
+        bprintlf(YELLOW_BG "WARNING: Vehicle maximum speed exceeds %.03f meters per second!", simState->velocity_max);
     }
 
     bprintlf();

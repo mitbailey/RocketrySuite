@@ -24,6 +24,9 @@
  * 
  */
 
+// TODO: Implement the >update command.
+// TODO: Implement the >calculate area command.
+
 #include <stdint.h>
 #include <string.h>
 #include "meb_print.h"

@@ -53,6 +53,7 @@ void display_help_verbose()
 
     bprintlf(">run - Run the simulation given the current launch vehicle configuration and weather conditions.");
     bprintlf(">set vehicle - Creates a new launch vehicle with the relevant parameters.");
+    bprintlf(">set engine - Creates a new engine with the given set of values.");
     bprintlf(">set conditions - Creates a new set of weather conditions.");
     bprintlf(">set parachute - Sets the parameters of the vehicle's parachute.");
     bprintlf(">set angle - Manually sets the launch angle of the vehicle.");
@@ -328,7 +329,7 @@ uint16_t tokenize(const char *input, char tokens[TOKENS_LEN_X][TOKENS_LEN_Y], ui
 
 void parse_and_execute(Simulation *sim, const char tokens[TOKENS_LEN_X][TOKENS_LEN_Y], uint16_t num_tokens)
 {
-    dbprintlf("num_tokens: %d", num_tokens);
+    // dbprintlf("num_tokens: %d", num_tokens);
 
     // Parse the input.
     if (!strcmp(tokens[0], "help"))
